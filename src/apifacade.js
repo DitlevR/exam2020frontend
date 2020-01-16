@@ -1,6 +1,6 @@
 import React from "react";
 
-const URL = "http://localhost:8080/securitystarter";
+const URL = "https://idon.dk/exambackend";
 function handleHttpErrors(res) {
   if (!res.ok) {
     return Promise.reject({ status: res.status, fullError: res.json() });
@@ -29,9 +29,9 @@ class ApiFacade {
   logout = () => {
     localStorage.removeItem("jwtToken");
   };
-  getData = () => {
+  getData = props => {
     console.log("fetching");
-    fetch(URL + "/api/info/getdata")
+    fetch(URL + props)
       .then(handleHttpErrors)
       .then(res => {
         console.log(res);
@@ -64,6 +64,16 @@ class ApiFacade {
       .then(handleHttpErrors)
       .then(res => {
         this.setToken(res.token);
+      });
+  };
+
+  fetchMovies = setMovies => {
+    const options = this.makeOptions("GET", true);
+    fetch(URL + "/api/movie/all", options)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setMovies(data);
       });
   };
 }
